@@ -88,11 +88,36 @@ def generate_sinus(show_figure: bool=False, save_path: str | None=None):
 
 
 def download_data(url="https://ehw.fit.vutbr.cz/izv/temp.html"):
-    pass
+    r = requests.get(url=url)
+    soup = BeautifulSoup(r.content, features="lxml")
+    data = list()
+    tr = soup.find_all('tr', class_='ro1')
+    for row in tr:
+        p = row.find_all('p')
+        temp = np.empty(len(p) - 2, dtype = float)
+        row_tuple = {}
+        for i, j in enumerate(p):
+            text = j.text            
+            if i == 0:
+                row_tuple["year"] = int(text)
+            elif i == 1:
+                row_tuple["month"] = int(text)
+            else:
+                temp[i - 2] = float(text.replace(',','.'))
+        row_tuple["temp"] = temp
+        data.append(row_tuple)
+    
+    return data
 
 
 def get_avg_temp(data, year=None, month=None) -> float:
-    pass
-
-# generate_graph([1.0, 2.0, -2.0], True, False)
-generate_sinus(True, False)
+    if(year):
+        data = [x["temp"] for x in data if x["year"] == year]
+    elif(month):
+        data = [x["temp"] for x in data if x["month"] == month]
+    elif(year and month):
+        data = [x["temp"] for x in data if x["year"] == year and x["month"] == month]
+    else:
+        data = [x["temp"] for x in data]
+    data = np.concatenate(data, axis=0)
+    return (np.sum(data) / data.size)
