@@ -22,9 +22,9 @@ def integrate(x: np.array, y: np.array) -> float:
 
 
 def generate_graph(a: List[float], show_figure: bool = False, save_path: str | None=None):
-    step = 0.05
-    x = np.arange(-3, 3 + step, step)
+    x = np.linspace(-3,3,100)
     x_2 = np.power(x, 2).reshape(-1, 1)
+    a = np.full([x_2.shape[0], len(a)], a)
     f = a * x_2
     y_1 = f[:, 0]
     y_2 = f[:, 1]
@@ -50,6 +50,7 @@ def generate_graph(a: List[float], show_figure: bool = False, save_path: str | N
     fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.0), ncol=3)
     fig.tight_layout()
     fig.subplots_adjust(top=0.9)
+
     if show_figure:
         plt.show()
     if save_path:
@@ -58,7 +59,32 @@ def generate_graph(a: List[float], show_figure: bool = False, save_path: str | N
 
 
 def generate_sinus(show_figure: bool=False, save_path: str | None=None):
-    pass
+    t = np.linspace(0, 100, 20000)
+    f1 = 0.5 * np.sin(np.pi / 50 * t)
+    f2 = 0.25 * np.sin(np.pi * t)
+    f3 = f1 + f2
+
+    fig = plt.figure(constrained_layout=True, figsize=(10, 18))
+    axes = (fig.add_gridspec(nrows=3).subplots())
+    ax1, ax2, ax3 = axes
+    for ax in axes:
+        ax.set_xlabel('t')
+        ax.set_ylim(-0.8, 0.8)
+        ax.spines.bottom.set_position(('data', -0.8))
+        ax.set_yticks(np.arange(-0.8, 1.2, 0.4))
+        ax.set_xlim(0, 100)
+    ax1.set_ylabel(r'$f_1(t)$')
+    ax2.set_ylabel(r'$f_2(t)$')
+    ax3.set_ylabel(r'$f_1(t) + f_2(t)$')
+    ax1.plot(t, f1)
+    ax2.plot(t, f2)
+    ax3.plot(t, np.ma.masked_less(f3, f1), 'g')
+    ax3.plot(t, np.ma.masked_greater_equal(f3, f1), 'r')
+
+    if show_figure:
+        plt.show()
+    if save_path:
+        fig.savefig(save_path, bbox_inches="tight")
 
 
 def download_data(url="https://ehw.fit.vutbr.cz/izv/temp.html"):
@@ -68,5 +94,5 @@ def download_data(url="https://ehw.fit.vutbr.cz/izv/temp.html"):
 def get_avg_temp(data, year=None, month=None) -> float:
     pass
 
-generate_graph([1.0, 2.0, -2.0], True, False)
-# generate_graph([1.0, 2.0, -2.0], True, "graph.png")
+# generate_graph([1.0, 2.0, -2.0], True, False)
+generate_sinus(True, False)
