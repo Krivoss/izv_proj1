@@ -157,5 +157,3 @@ def get_avg_temp(data, year=None, month=None) -> float:
         data = [x["temp"] for x in data]
     data = np.concatenate(data, axis=0)
     return (np.sum(data) / data.size)
-
-generate_graph([1.0, 2.0, -2.0], True)
