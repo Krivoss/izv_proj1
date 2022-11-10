@@ -56,8 +56,8 @@ def generate_graph(a: List[float], show_figure: bool = False,
     ax.annotate(
         r'$\int f_{-2.0}(x)dx$', xy=(3, y_m2[-1]), verticalalignment='center')
     ax.set_ylim(-20, 20)
-    ax.set_xlim(-3, 4)
     ax.spines.bottom.set_position(('data', -20))
+    ax.set_xlim(-3, 4)
     ax.xaxis.get_major_ticks()[-1].set_visible(False)
     ax.spines['right'].set_position(('data', 4))
     ax.fill_between(x, y_2, 0, color='tab:orange', alpha=0.1, linewidth=0)
@@ -157,3 +157,5 @@ def get_avg_temp(data, year=None, month=None) -> float:
         data = [x["temp"] for x in data]
     data = np.concatenate(data, axis=0)
     return (np.sum(data) / data.size)
+
+generate_graph([1.0, 2.0, -2.0], True)
