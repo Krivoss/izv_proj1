@@ -82,7 +82,7 @@ def generate_sinus(show_figure: bool = False, save_path: str | None = None):
         show_figure -- display graph (default False)
         save_path -- save graph (default None)
     """
-    t = np.linspace(0, 100, 20000)
+    t = np.linspace(0, 100, 10000)
     f1 = 0.5 * np.sin(np.pi / 50 * t)
     f2 = 0.25 * np.sin(np.pi * t)
     f3 = f1 + f2
